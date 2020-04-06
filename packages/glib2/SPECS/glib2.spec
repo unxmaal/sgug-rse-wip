@@ -20,9 +20,12 @@ A quick and dirty port of glib 2.59.0
 %patch0 -p1 -b .irix~ 
 
 %build
-export LDFLAGS="-lpthread -Wl,-rpath -Wl,%{_libdir}"
+# Package can fail with some incorrectly discovered cache entries
+# We can get a "unique" cache by introducing a unique CPPFLAGS define
+export CPPFLAGS="-DSGUG_GLIB2_UNIQ_CCACHE=1 $CPPFLAGS"
 ./autogen.sh
 %{configure} --with-libiconv=gnu
+make %{?_smp_mflags}
 
 %check
 
